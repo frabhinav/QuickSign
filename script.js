@@ -8,6 +8,7 @@ const lastSavedButton = document.getElementById('lastSavedButton');
 
 const context = canvas.getContext('2d');
 let isDrawing = false;
+let lastX, lastY;
 
 let lastSavedKey = localStorage.getItem('lastSavedKey');
 
@@ -26,8 +27,7 @@ penWidthInput.addEventListener('input', () => {
 
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    lastX = e.offsetX;
-    lastY = e.offsetY;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
 });
 
 canvas.addEventListener('mousemove', (e) => {
@@ -36,12 +36,38 @@ canvas.addEventListener('mousemove', (e) => {
         context.moveTo(lastX, lastY);
         context.lineTo(e.offsetX, e.offsetY);
         context.stroke();
-        lastX = e.offsetX;
-        lastY = e.offsetY;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
     }
 });
 
 canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+});
+
+canvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    if (isDrawing) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const offsetX = touch.clientX - rect.left;
+        const offsetY = touch.clientY - rect.top;
+
+        context.beginPath();
+        context.moveTo(lastX, lastY);
+        context.lineTo(offsetX, offsetY);
+        context.stroke();
+        [lastX, lastY] = [offsetX, offsetY];
+    }
+    e.preventDefault(); 
+});
+
+canvas.addEventListener('touchend', () => {
     isDrawing = false;
 });
 
@@ -56,7 +82,6 @@ downloadButton.addEventListener('click', () => {
     const uniqueKey = `signature_${currentTime}`;
     
     localStorage.setItem(uniqueKey, image);
-    
     localStorage.setItem('lastSavedKey', uniqueKey);
     
     const link = document.createElement('a');
