@@ -1,6 +1,6 @@
 # QuickSign
 
-# Signature Canvas App
+## Signature Canvas App
 
 ## Overview
 
@@ -8,7 +8,7 @@ The **Signature Canvas App** is a simple web-based application that allows users
 
 ## Demo
 
-You can try out the app live here: [Demo Link] (if you have one).
+You can try out the app live here: [Demo Link](https://frabhinav.github.io/QuickSign/).
 
 ## Technologies Used
 
@@ -119,4 +119,4 @@ Feel free to fork the repository and submit pull requests. Any contributions to 
 
 ---
 
-Let me know if you'd like to add anything else!
+Let me know if this works, or if you need any more changes!
