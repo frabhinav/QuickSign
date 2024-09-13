@@ -3,41 +3,57 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     font-family: 'Courier New', Courier, monospace;
     background-color: #FFBE98;
+    margin: 0;
 }
+
 canvas {
     border: 2px solid #000;
     cursor: grab;
+    max-width: 100%;
+    height: auto; 
 }
+
 canvas:active {
     cursor: grabbing;
 }
+
 #signatureCanvas {
     margin: 0 2rem;
+    width: 100%; 
+    max-width: 800px;
 }
+
 .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 1rem; 
 }
+
 .top {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     margin-bottom: 1.25rem;
 }
+
 .topdiv {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     margin-right: 1.25rem;
+    margin-bottom: 1rem; 
 }
-input {
+
+input, button {
     margin-top: 0.625rem;
     padding: 0.313rem;
     border-radius: 0.313rem;
@@ -45,23 +61,27 @@ input {
     border: 1px solid #000;
     cursor: pointer;
 }
-button {
-    margin-top: 0.625rem;
-    padding: 0.313rem;
-    border-radius: 0.313rem;
-    width: 10rem;
-    cursor: pointer;
+
+input {
+    width: auto;
 }
+
+button {
+    width: auto; 
+}
+
 #clearButton {
     background-color: tomato;
     color: white;
     border: 1px solid tomato;
 }
+
 #downloadButton {
     background-color: #4CAF50;
     color: white;
     border: 1px solid #4CAF50;
 }
+
 #lastSavedButton {
     background-color: #008CBA;
     color: white;
