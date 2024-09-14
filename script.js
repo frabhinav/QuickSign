@@ -29,9 +29,11 @@ penWidthInput.addEventListener('input', () => {
 // Function to get touch position relative to the canvas
 function getTouchPosition(touch) {
     const rect = canvas.getBoundingClientRect();
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
     return {
-        x: touch.clientX - rect.left,
-        y: touch.clientY - rect.top
+        x: touch.clientX - rect.left + scrollLeft,
+        y: touch.clientY - rect.top + scrollTop
     };
 }
 
