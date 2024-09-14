@@ -31,12 +31,14 @@ function getTouchPosition(touch) {
     const rect = canvas.getBoundingClientRect();
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+    const x = touch.clientX - rect.left + scrollLeft;
+    const y = touch.clientY - rect.top + scrollTop;
+    console.log(`Touch position: x=${x}, y=${y}`);
     return {
-        x: touch.clientX - rect.left + scrollLeft,
-        y: touch.clientY - rect.top + scrollTop
+        x: x,
+        y: y
     };
 }
-
 // Handle drawing for mouse events
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
