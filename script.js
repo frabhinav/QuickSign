@@ -12,6 +12,7 @@ let lastX, lastY;
 
 let lastSavedKey = localStorage.getItem('lastSavedKey');
 
+// Handle input changes
 bgColorInput.addEventListener('input', (e) => {
     canvas.style.backgroundColor = e.target.value;
 });
@@ -25,18 +26,37 @@ penWidthInput.addEventListener('input', () => {
     context.lineWidth = penWidthInput.value;
 });
 
+// Helper function to get the correct coordinates for mouse/touch
+function getCanvasCoordinates(e) {
+    const rect = canvas.getBoundingClientRect();
+    let x, y;
+
+    if (e.touches) {
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+    } else {
+        x = e.offsetX;
+        y = e.offsetY;
+    }
+
+    return { x, y };
+}
+
+// Handle drawing for mouse events
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    [lastX, lastY] = [e.offsetX, e.offsetY];
+    const { x, y } = getCanvasCoordinates(e);
+    [lastX, lastY] = [x, y];
 });
 
 canvas.addEventListener('mousemove', (e) => {
     if (isDrawing) {
+        const { x, y } = getCanvasCoordinates(e);
         context.beginPath();
         context.moveTo(lastX, lastY);
-        context.lineTo(e.offsetX, e.offsetY);
+        context.lineTo(x, y);
         context.stroke();
-        [lastX, lastY] = [e.offsetX, e.offsetY];
+        [lastX, lastY] = [x, y];
     }
 });
 
@@ -44,37 +64,36 @@ canvas.addEventListener('mouseup', () => {
     isDrawing = false;
 });
 
+// Handle touch events for mobile
 canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
-    const touch = e.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+    const { x, y } = getCanvasCoordinates(e);
+    [lastX, lastY] = [x, y];
+    e.preventDefault(); // Prevent scrolling
 });
 
 canvas.addEventListener('touchmove', (e) => {
     if (isDrawing) {
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        const offsetX = touch.clientX - rect.left;
-        const offsetY = touch.clientY - rect.top;
-
+        const { x, y } = getCanvasCoordinates(e);
         context.beginPath();
         context.moveTo(lastX, lastY);
-        context.lineTo(offsetX, offsetY);
+        context.lineTo(x, y);
         context.stroke();
-        [lastX, lastY] = [offsetX, offsetY];
+        [lastX, lastY] = [x, y];
     }
-    e.preventDefault(); 
+    e.preventDefault(); // Prevent scrolling
 });
 
 canvas.addEventListener('touchend', () => {
     isDrawing = false;
 });
 
+// Clear the canvas
 clearButton.addEventListener('click', () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
 });
 
+// Save and download the signature
 downloadButton.addEventListener('click', () => {
     const image = canvas.toDataURL('image/png');
     
@@ -90,6 +109,7 @@ downloadButton.addEventListener('click', () => {
     link.click();
 });
 
+// Load the last saved signature
 lastSavedButton.addEventListener('click', () => {
     lastSavedKey = localStorage.getItem('lastSavedKey');
     
