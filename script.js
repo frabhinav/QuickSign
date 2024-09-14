@@ -26,37 +26,38 @@ penWidthInput.addEventListener('input', () => {
     context.lineWidth = penWidthInput.value;
 });
 
-// Helper function to get the correct coordinates for mouse/touch
-function getCanvasCoordinates(e) {
+// Function to get position relative to canvas (works for both mouse and touch)
+function getPosition(e) {
     const rect = canvas.getBoundingClientRect();
-    let x, y;
-
-    if (e.touches) {
-        x = e.touches[0].clientX - rect.left;
-        y = e.touches[0].clientY - rect.top;
+    if (e.touches && e.touches.length > 0) {
+        const touch = e.touches[0];
+        return {
+            x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+            y: (touch.clientY - rect.top) * (canvas.height / rect.height)
+        };
     } else {
-        x = e.offsetX;
-        y = e.offsetY;
+        return {
+            x: (e.clientX - rect.left) * (canvas.width / rect.width),
+            y: (e.clientY - rect.top) * (canvas.height / rect.height)
+        };
     }
-
-    return { x, y };
 }
 
 // Handle drawing for mouse events
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
-    const { x, y } = getCanvasCoordinates(e);
-    [lastX, lastY] = [x, y];
+    const pos = getPosition(e);
+    [lastX, lastY] = [pos.x, pos.y];
 });
 
 canvas.addEventListener('mousemove', (e) => {
     if (isDrawing) {
-        const { x, y } = getCanvasCoordinates(e);
+        const pos = getPosition(e);
         context.beginPath();
         context.moveTo(lastX, lastY);
-        context.lineTo(x, y);
+        context.lineTo(pos.x, pos.y);
         context.stroke();
-        [lastX, lastY] = [x, y];
+        [lastX, lastY] = [pos.x, pos.y];
     }
 });
 
@@ -67,21 +68,21 @@ canvas.addEventListener('mouseup', () => {
 // Handle touch events for mobile
 canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
-    const { x, y } = getCanvasCoordinates(e);
-    [lastX, lastY] = [x, y];
-    e.preventDefault(); // Prevent scrolling
+    const pos = getPosition(e);
+    [lastX, lastY] = [pos.x, pos.y];
+    e.preventDefault();  // Prevent scroll on touch
 });
 
 canvas.addEventListener('touchmove', (e) => {
     if (isDrawing) {
-        const { x, y } = getCanvasCoordinates(e);
+        const pos = getPosition(e);
         context.beginPath();
         context.moveTo(lastX, lastY);
-        context.lineTo(x, y);
+        context.lineTo(pos.x, pos.y);
         context.stroke();
-        [lastX, lastY] = [x, y];
+        [lastX, lastY] = [pos.x, pos.y];
     }
-    e.preventDefault(); // Prevent scrolling
+    e.preventDefault();  // Prevent scrolling on touch move
 });
 
 canvas.addEventListener('touchend', () => {
